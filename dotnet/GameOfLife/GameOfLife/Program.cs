@@ -10,8 +10,8 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            World myWorld = new World(10, 10);
-            myWorld.CurrentWorld[0, 0].IsAlive = true;
+            World myWorld = new World(15);
+            myWorld.RamdomlySeedTheWorld();
             myWorld.DisplayWorld();
             Console.ReadLine();
         }

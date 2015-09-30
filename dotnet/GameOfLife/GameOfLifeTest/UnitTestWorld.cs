@@ -10,14 +10,15 @@ namespace GameOfLifeTest
         [TestMethod]
         public void TestWorldConstructorDefault()
         {
-            World myWorld = new World(10, 10);
+            World myWorld = new World(10);
             Assert.IsFalse(myWorld.CurrentWorld[0, 0].IsAlive);
         }
 
         [TestMethod]
-        public void MyTestMethod()
+        [ExpectedException(typeof(ArgumentOutOfRangeException))]
+        public void TestMinimumWorldSize()
         {
-
+            World myWorld = new World(0);
         }
     }
 }
