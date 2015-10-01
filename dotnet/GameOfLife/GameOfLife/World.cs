@@ -87,7 +87,8 @@ namespace GameOfLife
                     {
                         for (int l = j - 1; l < j + 1; l++)
                         {
-                            if (k == i && l == j) { /* center Cell, so ignore */ }
+                            // calculate number of alive neighbors
+                            if (k == i && l == j) { /* center cell, so ignore */ }
                             else
                             {
                                 // check all eight neighbors to see if they are alive
@@ -109,6 +110,25 @@ namespace GameOfLife
                     // if cell.IsAlive && aliveNeighbors < 2 or > 3, then newWorld[i,j].IsAlive = false;
                     // if cell.IsAlive && aliveNeibors > 1 and < 4, then newWorld[i,j].IsAlive = true;
                     // if !cell.IsAlive && aliveNeighbors == 3, then newWorld[i,j].IsAlive = true;
+
+                    if (this._currentworld[i,j].IsAlive)
+                    {
+                        if (aliveNeighbors < 2 || aliveNeighbors > 3)
+                        {
+                            // cell dies
+                        }
+                        else
+                        {
+                            // cell lives
+                        }
+                    }
+                    else
+                    {
+                        if (aliveNeighbors == 3)
+                        {
+                            // cell lives
+                        }
+                    }
                 }
             }
         }
