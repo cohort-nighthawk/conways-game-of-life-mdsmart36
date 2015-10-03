@@ -10,9 +10,26 @@ namespace GameOfLife
     {
         static void Main(string[] args)
         {
-            World myWorld = new World(15);
-            myWorld.RamdomlySeedTheWorld();
+            World myWorld = new World(20);
+            //myWorld.RamdomlySeedTheWorld();
+            //myWorld.SeedWithBlinkers();
+            //myWorld.SeedWithToad();
+            //myWorld.SeedWithGlider();
+            myWorld.SeedWithFourLevelPyramid();
+
             myWorld.DisplayWorld();
+            Console.WriteLine(" -- SEED--");
+            Console.ReadLine();
+            
+            for (int i = 0; i < 40; i++)
+            {
+                myWorld.ApplyTheRulesOfTheGame();
+                myWorld.DisplayWorld();
+                Console.WriteLine("Generation {0}", i + 1);
+                //Console.ReadLine();
+                System.Threading.Thread.Sleep(1000);
+            }
+
             Console.ReadLine();
         }
     }

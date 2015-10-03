@@ -15,9 +15,18 @@ namespace GameOfLife
             set { isAlive = value; }
         }
 
+        private bool nextGeneration;
+        public bool NextGeneration
+        {
+            get { return nextGeneration; }
+            set { nextGeneration = value; }
+        }
+
+
         public Cell()
         {
             this.isAlive = false;
+            this.nextGeneration = false;
         }
 
     }

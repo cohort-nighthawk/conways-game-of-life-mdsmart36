@@ -55,7 +55,7 @@ namespace GameOfLife
             {
                 for (int j = 0; j < this.dimension; j++)
                 {
-                    Console.Write("{0}", (this._currentworld[i, j].IsAlive ? "1" : "0"));
+                    Console.Write("{0}", (this._currentworld[i, j].IsAlive ? "*" : " "));
                 }
                 Console.WriteLine();
             }
@@ -74,31 +74,111 @@ namespace GameOfLife
             }
         }
 
-        public void ApplyTheRulesOfTheGame()
+        public void SeedWithBlinkers()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                this._currentworld[3, 3 + i].IsAlive = true;
+                this._currentworld[8, 8 + i].IsAlive = true;
+            }
+        }
+
+        public void SeedWithToad()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                this._currentworld[3, 3 + i].IsAlive = true;
+                this._currentworld[4, 2 + i].IsAlive = true;
+
+                this._currentworld[8, 8 + i].IsAlive = true;
+                this._currentworld[9, 7 + i].IsAlive = true;
+            }
+        }
+
+        public void SeedWithGlider()
+        {
+            this._currentworld[1, 4].IsAlive = true;
+            this._currentworld[2, 5].IsAlive = true;
+            for (int i = 0; i < 3; i++)
+            {
+                this._currentworld[3, 3 + i].IsAlive = true;
+            }
+        }
+
+        public void SeedWithFourLevelPyramid()
+        {
+            int firstX = 5;
+            int firstY = 10;
+
+            // top
+            this._currentworld[firstX, firstY].IsAlive = true;
+            for (int i = 0; i < 3; i++)
+            {
+                this._currentworld[firstX + 1, i + (firstY - 1)].IsAlive = true;
+            }
+            for (int i = 0; i < 5; i++)
+            {
+                this._currentworld[firstX + 2, i + (firstY - 2)].IsAlive = true;
+            }
+            for (int i = 0; i < 7; i++)
+            {
+                this._currentworld[firstX + 3, i + (firstY - 3)].IsAlive = true;
+            }
+
+            // bottom
+        }
+
+        public int CountAliveNeighbors(int i, int j)
         {
             int aliveNeighbors = 0;
+            for (int k = i - 1; k <= i + 1; k++)
+            {
+                for (int l = j - 1; l <= j + 1; l++)
+                {
+                    // calculate number of alive neighbors
+                    if (k == i && l == j) { /* center cell, so ignore */ }
+                    else
+                    {
+                        // check all eight neighbors to see if they are alive
+                        if (this._currentworld[k, l].IsAlive)
+                        {
+                            aliveNeighbors++;
+                        }
+                    }
+                }
+            }
+            return aliveNeighbors;
+        }
+
+        public void ApplyTheRulesOfTheGame()
+        {
+            int aliveNeighbors;
             // loop through all the cells, but only test the cells that are 1+ row from the edge
             int edge = this.dimension - 1;
             for (int i = 1; i < edge; i++)
             {
                 for (int j = 1; j < edge; j++)
                 {
-                    for (int k = i - 1; k <= i + 1; k++)
-                    {
-                        for (int l = j - 1; l < j + 1; l++)
-                        {
-                            // calculate number of alive neighbors
-                            if (k == i && l == j) { /* center cell, so ignore */ }
-                            else
-                            {
-                                // check all eight neighbors to see if they are alive
-                                if (this._currentworld[k,l].IsAlive)
-                                {
-                                    aliveNeighbors++;
-                                }
-                            }
-                        }
-                    }
+                    //aliveNeighbors = 0;
+                    //for (int k = i - 1; k <= i + 1; k++)
+                    //{
+                    //    for (int l = j - 1; l <= j + 1; l++)
+                    //    {
+                    //        // calculate number of alive neighbors
+                    //        if (k == i && l == j) { /* center cell, so ignore */ }
+                    //        else
+                    //        {
+                    //            // check all eight neighbors to see if they are alive
+                    //            if (this._currentworld[k,l].IsAlive)
+                    //            {
+                    //                aliveNeighbors++;
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
+                    aliveNeighbors = CountAliveNeighbors(i, j);
+
                     // apply rules here and set value for next generation
                     /*
                     1. Any live cell with fewer than two live neighbours dies, as if caused by under-population.
@@ -116,10 +196,12 @@ namespace GameOfLife
                         if (aliveNeighbors < 2 || aliveNeighbors > 3)
                         {
                             // cell dies
+                            this._currentworld[i, j].NextGeneration = false;
                         }
                         else
                         {
                             // cell lives
+                            this._currentworld[i, j].NextGeneration = true;
                         }
                     }
                     else
@@ -127,9 +209,19 @@ namespace GameOfLife
                         if (aliveNeighbors == 3)
                         {
                             // cell lives
+                            this._currentworld[i, j].NextGeneration = true;
                         }
                     }
                 }
+            }
+            // set the world to the next generation
+            for (int i = 0; i < this.dimension; i++)
+            {
+                for (int j = 0; j < this.dimension; j++)
+                {
+                    this._currentworld[i, j].IsAlive = this._currentworld[i, j].NextGeneration;
+                }
+                Console.WriteLine();
             }
         }
     }
