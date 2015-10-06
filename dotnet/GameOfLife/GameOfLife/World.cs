@@ -107,25 +107,55 @@ namespace GameOfLife
 
         public void SeedWithFourLevelPyramid()
         {
+            //            *
+            //           ***
+            //          *****
+
+            // position of top
             int firstX = 5;
             int firstY = 10;
 
-            // top
+            // top cell
             this._currentworld[firstX, firstY].IsAlive = true;
+
+            // second row
             for (int i = 0; i < 3; i++)
             {
                 this._currentworld[firstX + 1, i + (firstY - 1)].IsAlive = true;
             }
+
+            // third row
             for (int i = 0; i < 5; i++)
             {
                 this._currentworld[firstX + 2, i + (firstY - 2)].IsAlive = true;
             }
+
+            // fourth row
             for (int i = 0; i < 7; i++)
             {
                 this._currentworld[firstX + 3, i + (firstY - 3)].IsAlive = true;
             }
 
-            // bottom
+            // bottom (if you want to add a mirror image)
+        }
+
+        public void SeedWithSquare()
+        {
+            int firstX = 4;
+            int firstY = 4;
+            int dimension = 8;
+
+            for (int i = firstX; i < firstX + dimension; i++)
+            {
+                for (int j = firstY; j < firstY + dimension; j++)
+                {
+                    if (i == firstX || i == firstX + dimension - 1 || j == firstY || j == firstY + dimension - 1)
+                    {
+                        this._currentworld[i, j].IsAlive = true;
+                    }
+
+                }
+            }
         }
 
         public int CountAliveNeighbors(int i, int j)
@@ -150,6 +180,20 @@ namespace GameOfLife
             return aliveNeighbors;
         }
 
+        public bool DetermineNextGeneration(bool cellIsAlive, int aliveNeighbors)
+        {
+            if (cellIsAlive)
+            {
+                if (aliveNeighbors < 2 || aliveNeighbors > 3) { return false; } // cell dies
+                return true; // cell lives
+            }
+            else
+            {
+                if (aliveNeighbors == 3) { return true; } // cell lives
+                return false; // cell dies
+            }
+        }
+
         public void ApplyTheRulesOfTheGame()
         {
             int aliveNeighbors;
@@ -159,24 +203,6 @@ namespace GameOfLife
             {
                 for (int j = 1; j < edge; j++)
                 {
-                    //aliveNeighbors = 0;
-                    //for (int k = i - 1; k <= i + 1; k++)
-                    //{
-                    //    for (int l = j - 1; l <= j + 1; l++)
-                    //    {
-                    //        // calculate number of alive neighbors
-                    //        if (k == i && l == j) { /* center cell, so ignore */ }
-                    //        else
-                    //        {
-                    //            // check all eight neighbors to see if they are alive
-                    //            if (this._currentworld[k,l].IsAlive)
-                    //            {
-                    //                aliveNeighbors++;
-                    //            }
-                    //        }
-                    //    }
-                    //}
-
                     aliveNeighbors = CountAliveNeighbors(i, j);
 
                     // apply rules here and set value for next generation
@@ -191,27 +217,8 @@ namespace GameOfLife
                     // if cell.IsAlive && aliveNeibors > 1 and < 4, then newWorld[i,j].IsAlive = true;
                     // if !cell.IsAlive && aliveNeighbors == 3, then newWorld[i,j].IsAlive = true;
 
-                    if (this._currentworld[i,j].IsAlive)
-                    {
-                        if (aliveNeighbors < 2 || aliveNeighbors > 3)
-                        {
-                            // cell dies
-                            this._currentworld[i, j].NextGeneration = false;
-                        }
-                        else
-                        {
-                            // cell lives
-                            this._currentworld[i, j].NextGeneration = true;
-                        }
-                    }
-                    else
-                    {
-                        if (aliveNeighbors == 3)
-                        {
-                            // cell lives
-                            this._currentworld[i, j].NextGeneration = true;
-                        }
-                    }
+                    this._currentworld[i, j].NextGeneration = DetermineNextGeneration(this._currentworld[i, j].IsAlive, aliveNeighbors);
+
                 }
             }
             // set the world to the next generation

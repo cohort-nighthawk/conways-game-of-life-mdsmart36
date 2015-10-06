@@ -16,18 +16,19 @@ namespace GameOfLife
             //myWorld.SeedWithToad();
             //myWorld.SeedWithGlider();
             myWorld.SeedWithFourLevelPyramid();
+            //myWorld.SeedWithSquare();
 
             myWorld.DisplayWorld();
             Console.WriteLine(" -- SEED--");
             Console.ReadLine();
             
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < 60; i++)
             {
                 myWorld.ApplyTheRulesOfTheGame();
                 myWorld.DisplayWorld();
                 Console.WriteLine("Generation {0}", i + 1);
                 //Console.ReadLine();
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(750);
             }
 
             Console.ReadLine();
