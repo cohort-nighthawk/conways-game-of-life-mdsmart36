@@ -8,6 +8,7 @@ namespace GameOfLife
 {
     public class Cell
     {
+        // is this cell currently alive? T or F
         private bool isAlive;
         public bool IsAlive
         {
@@ -15,6 +16,7 @@ namespace GameOfLife
             set { isAlive = value; }
         }
 
+        // will this cell be alive in the next tick? T or F
         private bool nextGeneration;
         public bool NextGeneration
         {
@@ -25,6 +27,7 @@ namespace GameOfLife
 
         public Cell()
         {
+            // cell will be dead by default
             this.isAlive = false;
             this.nextGeneration = false;
         }

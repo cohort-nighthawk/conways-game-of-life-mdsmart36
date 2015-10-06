@@ -139,17 +139,33 @@ namespace GameOfLife
             // bottom (if you want to add a mirror image)
         }
 
-        public void SeedWithSquare()
+        public void SeedWithSquare(int XPos, int YPos, int dimension)
         {
-            int firstX = 4;
-            int firstY = 4;
-            int dimension = 8;
-
-            for (int i = firstX; i < firstX + dimension; i++)
+            // check for errors in the parameters
+            // if X or Y coordinate of top-left corner of square out of range
+            if ((XPos < 0 || XPos > this.dimension) || (YPos < 0 | YPos > this.dimension))
             {
-                for (int j = firstY; j < firstY + dimension; j++)
+                throw new ArgumentOutOfRangeException();
+            }
+
+            // if height or width is too large
+            if ((XPos + dimension > this.dimension) || (YPos + dimension > this.dimension))
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            // if dimension is too small
+            if (dimension < 2)
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            // create a square on the board
+            for (int i = XPos; i < XPos + dimension; i++)
+            {
+                for (int j = YPos; j < YPos + dimension; j++)
                 {
-                    if (i == firstX || i == firstX + dimension - 1 || j == firstY || j == firstY + dimension - 1)
+                    if (i == XPos || i == XPos + dimension - 1 || j == YPos || j == YPos + dimension - 1)
                     {
                         this._currentworld[i, j].IsAlive = true;
                     }
@@ -160,13 +176,18 @@ namespace GameOfLife
 
         public int CountAliveNeighbors(int i, int j)
         {
+            // each cell in the world has exactly 8 neighbors by definition
+
             int aliveNeighbors = 0;
             for (int k = i - 1; k <= i + 1; k++)
             {
                 for (int l = j - 1; l <= j + 1; l++)
                 {
                     // calculate number of alive neighbors
-                    if (k == i && l == j) { /* center cell, so ignore */ }
+                    if (k == i && l == j)
+                    {
+                        /* center cell, so ignore */
+                    }
                     else
                     {
                         // check all eight neighbors to see if they are alive
@@ -184,20 +205,21 @@ namespace GameOfLife
         {
             if (cellIsAlive)
             {
-                if (aliveNeighbors < 2 || aliveNeighbors > 3) { return false; } // cell dies
-                return true; // cell lives
+                if (aliveNeighbors < 2 || aliveNeighbors > 3)
+                { return false; } // cell dies from underpopulation or overpopulation
+                return true; // cell lives by optimal conditions
             }
             else
             {
-                if (aliveNeighbors == 3) { return true; } // cell lives
-                return false; // cell dies
+                if (aliveNeighbors == 3) { return true; } // cell lives as if by reproduction
+                return false; // cell remains dead
             }
         }
 
         public void ApplyTheRulesOfTheGame()
         {
             int aliveNeighbors;
-            // loop through all the cells, but only test the cells that are 1+ row from the edge
+            // loop through all the cells in the world, but only test the cells that are 1+ row from the edge
             int edge = this.dimension - 1;
             for (int i = 1; i < edge; i++)
             {
@@ -221,7 +243,7 @@ namespace GameOfLife
 
                 }
             }
-            // set the world to the next generation
+            // update the currentworld to reflect the next generation
             for (int i = 0; i < this.dimension; i++)
             {
                 for (int j = 0; j < this.dimension; j++)

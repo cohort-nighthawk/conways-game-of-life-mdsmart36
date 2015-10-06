@@ -14,9 +14,9 @@ namespace GameOfLife
             //myWorld.RamdomlySeedTheWorld();
             //myWorld.SeedWithBlinkers();
             //myWorld.SeedWithToad();
-            //myWorld.SeedWithGlider();
-            myWorld.SeedWithFourLevelPyramid();
-            //myWorld.SeedWithSquare();
+            myWorld.SeedWithGlider();
+            //myWorld.SeedWithFourLevelPyramid();
+            myWorld.SeedWithSquare(2, 2, 10);
 
             myWorld.DisplayWorld();
             Console.WriteLine(" -- SEED--");
